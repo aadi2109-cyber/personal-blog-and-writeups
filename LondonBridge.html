@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Writeup Title | Security Writeups</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        color: #e0e0e0;
+        line-height: 1.8;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin: 20px 0;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid #00ff88;
+        color: #00ff88;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 600;
+      }
+
+      .back-link:hover {
+        background: #00ff88;
+        color: #0f0c29;
+        transform: translateX(-5px);
+      }
+
+      article {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        margin-bottom: 40px;
+      }
+
+      .writeup-header {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+      }
+
+      h1 {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        background: linear-gradient(45deg, #00ff88, #00ccff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .meta-info {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+      }
+
+      .tag {
+        padding: 6px 15px;
+        background: rgba(0, 255, 136, 0.2);
+        border-radius: 15px;
+        font-size: 0.85em;
+        color: #00ff88;
+        border: 1px solid #00ff88;
+      }
+
+      .difficulty {
+        padding: 6px 15px;
+        border-radius: 15px;
+        font-size: 0.85em;
+        font-weight: 600;
+      }
+
+      .easy {
+        background: #4caf50;
+        color: white;
+      }
+
+      .medium {
+        background: #ff9800;
+        color: white;
+      }
+
+      .hard {
+        background: #f44336;
+        color: white;
+      }
+
+      .date {
+        color: #b0b0b0;
+        font-size: 0.9em;
+      }
+
+      h2 {
+        color: #00ccff;
+        margin-top: 35px;
+        margin-bottom: 15px;
+        font-size: 1.8em;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(0, 204, 255, 0.3);
+      }
+
+      h3 {
+        color: #00ff88;
+        margin-top: 25px;
+        margin-bottom: 12px;
+        font-size: 1.4em;
+      }
+
+      h4 {
+        color: #a0a0a0;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+      }
+
+      p {
+        margin-bottom: 15px;
+        color: #d0d0d0;
+      }
+
+      code {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 3px 8px;
+        border-radius: 4px;
+        color: #00ff88;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+        border: 1px solid rgba(0, 255, 136, 0.3);
+      }
+
+      pre {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 20px 0;
+        border: 1px solid rgba(0, 255, 136, 0.3);
+        position: relative;
+      }
+
+      pre code {
+        background: none;
+        padding: 0;
+        border: none;
+        color: #e0e0e0;
+        display: block;
+        line-height: 1.6;
+      }
+
+      .code-header {
+        background: rgba(0, 255, 136, 0.1);
+        padding: 8px 15px;
+        border-radius: 8px 8px 0 0;
+        margin: 20px 0 0 0;
+        color: #00ff88;
+        font-size: 0.85em;
+        font-weight: 600;
+        border: 1px solid rgba(0, 255, 136, 0.3);
+        border-bottom: none;
+      }
+
+      .code-header + pre {
+        margin-top: 0;
+        border-radius: 0 0 8px 8px;
+      }
+
+      blockquote {
+        border-left: 4px solid #00ff88;
+        padding-left: 20px;
+        margin: 20px 0;
+        color: #b0b0b0;
+        font-style: italic;
+        background: rgba(0, 255, 136, 0.05);
+        padding: 15px 20px;
+        border-radius: 0 8px 8px 0;
+      }
+
+      ul,
+      ol {
+        margin: 15px 0 15px 30px;
+        color: #d0d0d0;
+      }
+
+      li {
+        margin-bottom: 8px;
+      }
+
+      a {
+        color: #00ccff;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: all 0.3s ease;
+      }
+
+      a:hover {
+        color: #00ff88;
+        border-bottom-color: #00ff88;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th {
+        background: rgba(0, 255, 136, 0.2);
+        color: #00ff88;
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+      }
+
+      td {
+        padding: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .info-box {
+        background: rgba(0, 204, 255, 0.1);
+        border-left: 4px solid #00ccff;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+      }
+
+      .warning-box {
+        background: rgba(255, 152, 0, 0.1);
+        border-left: 4px solid #ff9800;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+      }
+
+      .success-box {
+        background: rgba(76, 175, 80, 0.1);
+        border-left: 4px solid #4caf50;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 30px 0;
+      }
+
+      .toc {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border: 1px solid rgba(0, 255, 136, 0.3);
+      }
+
+      .toc h3 {
+        margin-top: 0;
+        color: #00ff88;
+      }
+
+      .toc ul {
+        margin-left: 20px;
+      }
+
+      footer {
+        text-align: center;
+        padding: 30px;
+        color: #808080;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      @media (max-width: 768px) {
+        article {
+          padding: 20px;
+        }
+
+        h1 {
+          font-size: 1.8em;
+        }
+
+        h2 {
+          font-size: 1.4em;
+        }
+
+        pre {
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <a href="index.html" class="back-link">← Back to Writeups</a>
+
+      <article>
+        <div class="writeup-header">
+          <h1>London Bridge</h1>
+          <div class="meta-info">
+            <span class="tag">Web Exploitation</span>
+            <span class="tag">SSRF</span>
+            <span class="tag">LFI via SSRF</span>
+            <span class="difficulty medium">Medium</span>
+          </div>
+          <div class="date">Published: July 21, 2025</div>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="toc">
+          <h3>Table of Contents</h3>
+          <ul>
+            <li><a href="#overview">Challenge Overview</a></li>
+            <li><a href="#recon">Reconnaissance</a></li>
+            <li><a href="#exploitation">Exploitation</a></li>
+            <li><a href="#conclusion">Conclusion</a></li>
+          </ul>
+        </div>
+
+        <!-- Content starts here -->
+        <hr />
+        <p>
+          <strong
+            >User: Beth, Charles Root: Got root via CVE‑2018‑18955 Date: 21st
+            July, 2025
+          </strong>
+        </p>
+        <hr />
+        <h2 id="recon">⚙️ Recon</h2>
+        <h3 id="nmap-scan-">Nmap scan:</h3>
+        <pre><code class="lang-bash">nmap -<span class="hljs-keyword">sC</span> -sV <span class="hljs-variable">$IP</span> -p- -T4 -<span class="hljs-keyword">oN</span> nmap.md
+
+Result:
+# Nmap 7.95 scan initiated Sun Jul 20 17:43:21 2025 <span class="hljs-keyword">as</span>: /usr/lib/nmap/nmap --privileged -<span class="hljs-keyword">sC</span> -sV -p- -T4 -<span class="hljs-keyword">oN</span> nmap.md 10.10.136.145
+Nmap scan <span class="hljs-keyword">report</span> <span class="hljs-keyword">for</span> 10.10.136.145
+Host is up (0.16s latency).
+Not shown: 65533 closed tcp ports (reset)
+PORT     STATE SERVICE <span class="hljs-keyword">VERSION</span>
+22/tcp   <span class="hljs-keyword">open</span>  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.7 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 58:c1:e4:79:<span class="hljs-keyword">ca</span>:70:bc:3b:8d:b8:22:17:2f:62:1a:34 (RSA)
+|   256 2a:b4:1f:2c:72:35:7a:c3:7a:5c:7d:47:d6:d0:73:c8 (ECDSA)
+|_  256 1c:7e:d2:c9:dd:c2:e4:<span class="hljs-keyword">ac</span>:11:7e:45:6a:2f:44:af:0f (ED25519)
+8080/tcp <span class="hljs-keyword">open</span>  http    Gunicorn
+|_http-title: Explore London
+|_http-server-header: gunicorn
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please <span class="hljs-keyword">report</span> any incorrect results at https:<span class="hljs-comment">//nmap.org/submit/ .</span>
+# Nmap done at Sun Jul 20 17:52:50 2025 -- 1 IP address (1 host up) scanned <span class="hljs-keyword">in</span> 569.48 seconds
+</code></pre>
+        <info>
+          Note: (-p-) tag is used to scan for all ports and (-T4) to speed up
+          the the scan, -sC for running default scripts from NSE and -sV for
+          checking version of the scanned services.
+        </info>
+        <hr />
+        <h2 id="-web-enumeration">🌐 Web Enumeration</h2>
+        <h2 id="gobuster">Gobuster</h2>
+        <p>Found the following directories</p>
+        <ul>
+          <li>
+            <code>/upload</code>: Appears to be an image upload directory but is
+            not directly accessible (403).
+          </li>
+          <li>
+            <code>/gallery</code>: Allows uploading images but enforces strict
+            content-type validation.
+          </li>
+          <li>
+            <code>/dejaview</code>: Accepts a POST request with a
+            <code>www</code> parameter. Appears to render image files from the
+            provided input. This seemed suspicious and worth deeper
+            investigation.
+          </li>
+        </ul>
+        <p>
+          Server: Gunicorn (via HTTP headers) App appears to be Python-based
+          (confirmed later via <strong>pycache</strong>).
+        </p>
+        <hr />
+        <h2 id="-vulnerability">🔍 Vulnerability</h2>
+        <h3 id="lfi-via-ssrf-in-dejaview">LFI via SSRF in DejaView</h3>
+        <p>
+          There was a <strong>SSRF</strong> in <strong>DejaView</strong> which
+          allows us to send a request to another server on behalf of the
+          vulnerable server. This is confirmed by requesting the home page of
+          the same server. On fuzzing the parameters of the view_image we can
+          find a positive response for the parameter <code>www</code>. On
+          fuzzing the url for localhost, <code>127.1:80/</code> shows positive
+          results allowing LFI via SSRF.
+        </p>
+        <hr />
+        <h2 id="exploitation">Initial Access</h2>
+        <h3 id="ssh-access-of-user-beth-">
+          SSH access of user <code>beth</code>
+        </h3>
+        <p>
+          On reading the <code>id_rsa</code> file in the <code>.ssh/</code> file
+          we get the private key of a user but we don&#39;t know who is the
+          user. We find that user in the <code>authorized_users</code> file and
+          the name of the user is beth. On logging into the user beth we find
+          that we have access to the python http server files, and in the
+          <code>__pycache__</code> directory we find the user flag.
+        </p>
+        <hr />
+        <h2 id="user-privesc">User Privesc</h2>
+        <h3 id="enumeration">Enumeration</h3>
+        <p>
+          On enumeration we find that there is another user called
+          <strong>charles</strong> on a different uid and gid. We can&#39;t
+          access the user&#39;s directory. While looking for any SUID
+          misconfigured files using
+          <code>find / -type f -perm 4000 2&gt;/dev/null</code>, we find
+          <code>/usr/lib/dbus-1.0/dbus-daemon-launch-helper</code> .
+        </p>
+        <hr />
+        <h2 id="-privilege-escalation">🔺Privilege Escalation</h2>
+        <h3 id="root-using-cve-2018-18955-">
+          Root using <code>CVE-2018-18955</code>
+        </h3>
+        <p>
+          On researching more on the misconfigured dbus file we find the given
+          <code>CVE-2018-18955</code>, which exploits the video buffer in the
+          kernel of the system .
+        </p>
+        <h3 id="explanation-of-the-cve">Explanation of the CVE</h3>
+        <p>
+          The video buffer function called <code>__vb2_queue_free()</code> in
+          the module <code>videobuf2</code> in the kernel&#39;s
+          <code>Video4Linux2 API</code> frees up twice the structure of
+          <code>vb2_queue</code> if the device registration fails. This allows
+          <strong>Use-after-Free or even Arbitrary code execution</strong> . To
+          exploit this vulnerablity we use dbus or any other IPC system to fail
+          a device registration on purpose and gain control of the kernel
+          pointer which we can redirect to arbitary code execution.
+        </p>
+        <h3 id="exploitation-of-cve-2018-18955-">
+          Exploitation of <code>CVE-2018-18955</code>
+        </h3>
+        <p>
+          We first downloaded the kernel-exploits repo from
+          <a href="https://github.com/scheatkode/CVE-2018-18955"
+            >https://github.com/scheatkode/CVE-2018-18955</a
+          >
+          and started a simple http server. Then using wget we downloaded the
+          CVE files and then executed
+          <a
+            href="https://github.com/scheatkode/CVE-2018-18955/blob/main/exploit.dbus.sh"
+            title="exploit.dbus.sh"
+            >exploit.dbus.sh</a
+          >
+          . On execution we were root. We can find the root flag in the root
+          directory.
+        </p>
+        <h2 id="finding-charles-s-password">Finding Charles&#39;s Password</h2>
+        <h3 id="-mozilla-directory">.mozilla directory</h3>
+        <p>
+          In the <code>.mozilla</code> directory we can find a firefox directory
+          containing <code>8k3bf3zp.charles</code> . The directory was imported
+          using python&#39;s simple http server.
+        </p>
+        <h3 id="cracking-the-password">Cracking the Password</h3>
+        <p>
+          Using the python script, <code>firefox_decrypt.py</code> we can crack
+          the password of Charles.
+        </p>
+        <hr />
+        <h2 id="overview">🧾 TL;DR – London Bridge Box</h2>
+        <ul>
+          <li>
+            Nmap reveals SSH and Gunicorn web server on ports 22 &amp; 8080.
+          </li>
+          <li>
+            Found <code>/dejaview</code> POST endpoint with
+            <code>www</code> parameter vulnerable to LFI.
+          </li>
+          <li>
+            Retrieved SSH private key for <code>beth</code> → gained user
+            access.
+          </li>
+          <li>Found SUID binary: <code>dbus-daemon-launch-helper</code>.</li>
+          <li>
+            Exploited CVE-2018-18955 (Use-after-Free in kernel’s videobuf2
+            module) to get root.
+          </li>
+          <li>
+            Extracted Charles’s saved passwords from <code>.mozilla</code> using
+            <code>firefox_decrypt.py</code>.
+          </li>
+        </ul>
+        <hr />
+        <h2 id="conclusion">🧠 Final Thoughts</h2>
+        <p>
+          London Bridge was a solid box that tested web fuzzing, parameter
+          tampering, and post-exploitation enumeration. The DejaView LFI
+          required sharp parameter fuzzing and attention to request handling,
+          while privilege escalation showcased a real-world kernel exploit in a
+          safe lab setting. Overall, a well-rounded medium-difficulty box.
+        </p>
+        <p>
+          <strong>Challenges faced:</strong> Parameter fuzzing nuances and
+          navigating Linux namespaces during exploitation.
+        </p>
+      </artcle>
+
+      <footer>
+        <p>&copy; 2025 Aadi Jamadar. All rights reserved.</p>
+      </footer>
+    </div>
+  </body>
+</html>
